@@ -1,7 +1,5 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
-import React from 'react';
 
 const Navbar = () => {
   const { user, logout } = useAuth();
@@ -13,16 +11,13 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="bg-blue-600 p-4">
-      <div className="max-w-7xl mx-auto flex justify-between">
-        <h1 className="text-white text-2xl">Help Desk Ticketing System</h1>
-        <div>
+    <nav className="bg-blue-600 text-white p-4 flex justify-between items-center">
+      <Link to="/" className="text-2xl font-bold">Your apps name</Link>
+      <div>
         {user ? (
           <>
-            <Link to="/dashboard" className="text-white mx-4">Home</Link>
-            <Link to="/tickets" className="text-white mx-4">Tickets</Link>
-            <Link to="/createticket" className="text-white mx-4">Create Ticket</Link>
-            <Link to="/dashboard" className="text-white mx-4">Dashboard</Link>
+            <Link to="/tasks" className="mr-4">CRUD</Link>
+            <Link to="/profile" className="mr-4">Profile</Link>
             <button
               onClick={handleLogout}
               className="bg-red-500 px-4 py-2 rounded hover:bg-red-700"
@@ -41,7 +36,6 @@ const Navbar = () => {
             </Link>
           </>
         )}
-        </div>
       </div>
     </nav>
   );

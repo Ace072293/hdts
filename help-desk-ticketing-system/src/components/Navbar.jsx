@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 import React from 'react';
 
@@ -19,10 +19,11 @@ const Navbar = () => {
         <div>
         {user ? (
           <>
-            <Link to="/dashboard" className="text-white mx-4">Home</Link>
+            <Link to="/home" className="text-white mx-4">Home</Link>
             <Link to="/tickets" className="text-white mx-4">Tickets</Link>
-            <Link to="/createticket" className="text-white mx-4">Create Ticket</Link>
+            <Link to="/create-ticket" className="text-white mx-4">Create Ticket</Link>
             <Link to="/dashboard" className="text-white mx-4">Dashboard</Link>
+            <Link to="/" className="text-white mx-4">Logout</Link>
             <button
               onClick={handleLogout}
               className="bg-red-500 px-4 py-2 rounded hover:bg-red-700"
