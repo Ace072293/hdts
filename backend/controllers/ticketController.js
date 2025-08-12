@@ -1,9 +1,24 @@
 const Ticket = require('../models/Ticket');
 
 exports.getTickets = async (req, res) => {
+
+const page = parseInt(req.query.page) || 1;
+const limit = parseInt(req.query.limit) || 6;
+
   try {
     const tickets = await Ticket.find();
-    res.json(tickets);
+        .skip((page - 1) * limit)
+        .limit(limit);
+
+    const total = await Ticket.countDocuments();
+
+    res.json({
+        tickets,
+        total,
+        page,
+        totalPages: Math.ceil(total / limit),
+     });
+
   } catch (err) {
     res.status(500).json({ error: 'Failed to fetch tickets' });
   }
