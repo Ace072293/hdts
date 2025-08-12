@@ -1,23 +1,18 @@
-'Get Task Function (read)'
+// 'Get Task Function (read)'
 const Task = require('../models/Task');
 
 const getTasks = async (req, res) => { 
     
-try {
-    
-const tasks = await Task.find({ userId: req.user.id });
-
-res.json(tasks); 
-
-} catch (error) {
-    
-res.status(500).json({ message: error.message });
-
-}
+    try {
+        const tasks = await Task.find({ userId: req.user.id });
+        res.json(tasks); 
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
 };
 
 
-'Add Task Function' //comment
+// 'Add Task Function'
 const addTask = async (req, res) => {
 const { title, description, deadline } = req.body;
 try {
@@ -29,7 +24,7 @@ res.status(500).json({ message: error.message });
 };
 
 
-'Update Task Function'
+// 'Update Task Function'
 const updateTask = async (req, res) => {
 const { title, description, completed, deadline } = req.body;
 try {
@@ -49,7 +44,7 @@ res.status(500).json({ message: error.message });
 };
 
 
-'Delete Task Function'
+// 'Delete Task Function'
 const deleteTask = async (req, res) => {
 try {
 const task = await Task.findById(req.params.id);
