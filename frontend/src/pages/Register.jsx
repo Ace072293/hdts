@@ -42,6 +42,15 @@ const Register = () => {
           onChange={(e) => setFormData({ ...formData, password: e.target.value })}
           className="w-full mb-4 p-2 border rounded"
         />
+        <select
+          value={formData.role}
+          onChange={(e) => setFormData({ ...formData, role: e.target.value })}
+          className="w-full mb-4 p-2 border rounded"
+        >
+          <option value="employee">Employee</option>
+          <option value="administrator">Administrator</option>
+          <option value="tech_support">Tech Support</option>
+        </select>
         <button type="submit" className="w-full bg-green-600 text-white p-2 rounded">
           Register
         </button>

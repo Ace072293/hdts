@@ -4,7 +4,15 @@ import TicketForm from '../components/TicketForm';
 import axiosInstance from '../axiosConfig';
 
 const CreateTicket = () => {
-  const [formData, setFormData] = useState({ title: '', description: '' });
+  const [formData, setFormData] = useState({
+    title: '',
+    description: '',
+    name: '',
+    position: '',
+    email: '',
+    priority: 'urgent', // default value
+  });
+  
   const navigate = useNavigate();
 
   const handleSubmit = async (data) => {

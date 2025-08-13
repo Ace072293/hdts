@@ -9,6 +9,7 @@ const ticketSchema = new mongoose.Schema({
   priority: { type: String, enum: ['urgent', 'important', 'it-request'], required: true },
   createdAt: { type: Date, default: Date.now },
   status: { type: String, default: 'open' },
+  createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
 }, { timestamps: true });
 
 module.exports = mongoose.model('Ticket', ticketSchema);
