@@ -34,4 +34,15 @@ router.get('/:id', async (req, res) => {
   }
 });
 
+app.post('/api/tickets', async (req, res) => {
+    try {
+      const ticket = new Ticket(req.body);
+      await ticket.save();
+      res.status(201).json(ticket);
+    } catch (error) {
+      res.status(400).json({ error: 'Failed to create ticket' });
+    }
+  });
+  
+
 module.exports = router;
