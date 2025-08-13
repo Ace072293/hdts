@@ -26,6 +26,25 @@ router.delete('/:id', authenticateToken, async (req, res) => {
     }
   });
 
+router.put('/:id/assign', authenticateToken, async (req, res) => {
+try {
+    // Only admin can assign
+    if (req.user.role !== 'administrator') {
+    return res.status(403).json({ error: 'Not authorized' });
+    }
+    const { techSupportId } = req.body;
+    const ticket = await Ticket.findByIdAndUpdate(
+    req.params.id,
+    { assignedTo: techSupportId },
+    { new: true }
+    );
+    if (!ticket) return res.status(404).json({ error: 'Ticket not found' });
+    res.json(ticket);
+} catch (err) {
+    res.status(500).json({ error: 'Failed to assign ticket' });
+}
+});
+
 // All authenticated users can create tickets
 router.post('/', authenticateToken, async (req, res) => {
   try {
