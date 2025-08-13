@@ -29,7 +29,7 @@ const Navbar = () => {
               <>
                 <Link to="/tickets" className="text-white mx-4">Tickets</Link>
                 <Link to="/create-ticket" className="text-white mx-4">Create Ticket</Link>
-                <Link to="/dashboard" className="text-white mx-4">Dashboard</Link>
+                {/* <Link to="/dashboard" className="text-white mx-4">Dashboard</Link> */}
               </>
             )}
             <button

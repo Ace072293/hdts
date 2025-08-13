@@ -1,72 +1,104 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../axiosConfig';
+import { Pie } from 'react-chartjs-2';
+import { Chart, ArcElement, Tooltip, Legend } from 'chart.js';
+Chart.register(ArcElement, Tooltip, Legend);
+
+const statusLabels = {
+  open: 'Open',
+  in_progress: 'In Progress',
+  closed: 'Closed',
+};
+
+const statusColors = {
+  open: 'bg-green-100 text-green-700',
+  in_progress: 'bg-yellow-100 text-yellow-700',
+  closed: 'bg-gray-200 text-gray-700',
+};
 
 const Dashboard = () => {
   const [tickets, setTickets] = useState([]);
-  const [page, setPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
   const navigate = useNavigate();
-  const limit = 6; // Number of tickets per page
 
   useEffect(() => {
     const fetchTickets = async () => {
       try {
-        const response = await axiosInstance.get(`/api/tickets?page=${page}&limit=${limit}`);
-        setTickets(response.data?.tickets || []); // Ensure it's always an array
-        setTotalPages(response.data?.totalPages || 1);
+        const response = await axiosInstance.get('/api/tickets');
+        setTickets(response.data?.tickets || response.data || []);
       } catch (error) {
         alert('Failed to fetch tickets. Please try again later.');
-        setTickets([]); // Fallback to empty array
+        setTickets([]);
       }
     };
-  
     fetchTickets();
-  }, [page]);  
+  }, []);
 
-  const handleTicketClick = (ticketId) => {
-    navigate(`/tickets/${ticketId}`);
+  // Pie chart data
+  const getStatusCounts = (tickets) => {
+    const counts = { open: 0, in_progress: 0, closed: 0 };
+    tickets.forEach(ticket => {
+      if (counts[ticket.status] !== undefined) counts[ticket.status]++;
+    });
+    return counts;
   };
 
+  const statusCounts = getStatusCounts(tickets);
+  const pieData = {
+    labels: ['Open', 'In Progress', 'Closed'],
+    datasets: [
+      {
+        data: [statusCounts.open, statusCounts.in_progress, statusCounts.closed],
+        backgroundColor: ['#34d399', '#fbbf24', '#a1a1aa'],
+        borderWidth: 1,
+      },
+    ],
+  };
+
+  // Sort tickets newest to oldest
+  const sortedTickets = [...tickets].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
   return (
-    <div className="max-w-6xl mx-auto mt-20 px-4">
+    <div className="max-w-4xl mx-auto mt-20 px-4">
       <h1 className="text-4xl font-bold mb-8 text-center text-indigo-600">Dashboard</h1>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-        {tickets.map((ticket) => (
-          <div
-            key={ticket._id}
-            onClick={() => handleTicketClick(ticket._id)}
-            className="cursor-pointer bg-white shadow-md rounded-lg p-6 hover:shadow-xl transition duration-300 border border-gray-100"
-          >
-            <h2 className="text-xl font-semibold text-gray-800 mb-2">{ticket.title}</h2>
-            <p className="text-gray-600 mb-4">{ticket.description}</p>
-            <span className={`inline-block px-3 py-1 text-sm rounded-full ${
-              ticket.status === 'open' ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-700'
-            }`}>
-              {ticket.status}
-            </span>
-          </div>
-        ))}
+      {/* Pie Chart */}
+      <div className="max-w-xs mx-auto mb-10">
+        <Pie data={pieData} />
+        <div className="flex justify-between mt-2 text-sm">
+          <span className="text-green-600">Open</span>
+          <span className="text-yellow-600">In Progress</span>
+          <span className="text-gray-600">Closed</span>
+        </div>
       </div>
 
-      {/* Pagination Controls */}
-      <div className="flex justify-center space-x-4">
-        <button
-          onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
-          disabled={page === 1}
-          className="px-4 py-2 bg-indigo-500 text-white rounded disabled:opacity-50"
-        >
-          Previous
-        </button>
-        <span className="px-4 py-2 text-gray-700 font-medium">Page {page} of {totalPages}</span>
-        <button
-          onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))}
-          disabled={page === totalPages}
-          className="px-4 py-2 bg-indigo-500 text-white rounded disabled:opacity-50"
-        >
-          Next
-        </button>
+      {/* Notification List */}
+      <div className="bg-white rounded-lg shadow p-4">
+        <h2 className="text-2xl font-semibold mb-4 text-indigo-700">Recent Tickets</h2>
+        <ul>
+          {sortedTickets.length === 0 && (
+            <li className="text-gray-500">No tickets found.</li>
+          )}
+          {sortedTickets.map(ticket => (
+            <li key={ticket._id} className="flex items-center justify-between border-b last:border-b-0 py-3">
+              <div>
+                <button
+                  className="font-medium text-indigo-700 hover:underline text-left"
+                  onClick={() => navigate(`/tickets/${ticket._id}`)}
+                  style={{ background: 'none', border: 'none', padding: 0, margin: 0, cursor: 'pointer' }}
+                >
+                  {typeof ticket.title === 'string' ? ticket.title : '[Invalid Title]'}
+                </button>
+                <div className="text-gray-500 text-sm">
+                  {ticket.createdAt ? new Date(ticket.createdAt).toLocaleString() : ''}
+                </div>
+              </div>
+              <span className={`ml-4 px-3 py-1 text-sm rounded-full ${statusColors[ticket.status] || 'bg-gray-200 text-gray-700'}`}>
+                {statusLabels[ticket.status] || (typeof ticket.status === 'string' ? ticket.status : '[Invalid Status]')}
+              </span>
+            </li>
+          ))}
+        </ul>
       </div>
     </div>
   );

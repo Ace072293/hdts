@@ -47,7 +47,7 @@ const Tickets = () => {
   return (
     <div className="max-w-6xl mx-auto mt-16 p-6 bg-white shadow-2xl rounded-2xl">
       <h1 className="text-4xl font-extrabold mb-10 text-center text-indigo-700 tracking-tight drop-shadow">
-        {user?.role === 'administrator' ? 'Lodged Tickets' : 'My Tickets'}
+        {user && (user.role === 'administrator' || user.role === 'tech_support') ? 'Lodged Tickets' : 'My Tickets'}
       </h1>
       {loading && <div className="text-center text-lg text-gray-500">Loading...</div>}
       {error && <div className="text-center text-red-500 mb-4">{error}</div>}

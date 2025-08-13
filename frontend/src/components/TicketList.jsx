@@ -1,5 +1,6 @@
 import React from 'react';
 import { useAuth } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 const statusLabels = {
   open: 'Open',
@@ -13,7 +14,8 @@ const priorityLabels = {
   'it-request': 'IT Request',
 };
 
-const TicketList = ({ tickets, onDelete }) => {
+const TicketList = ({ tickets, onDelete, onStatusChange, showStatusControl }) => {
+  const navigate = useNavigate();
   const { user } = useAuth();
 
   if (!tickets.length) {
@@ -34,25 +36,40 @@ const TicketList = ({ tickets, onDelete }) => {
           </tr>
         </thead>
         <tbody>
-          {tickets.map((ticket, idx) => (
-            <tr key={ticket._id} className="border-b hover:bg-gray-50">
-              <td className="px-4 py-2">{idx + 1}</td>
-              <td className="px-4 py-2 font-semibold">{ticket.title}</td>
-              <td className="px-4 py-2">{statusLabels[ticket.status] || ticket.status}</td>
-              <td className="px-4 py-2">{priorityLabels[ticket.priority] || ticket.priority}</td>
-              <td className="px-4 py-2">{ticket.name || ticket.createdBy}</td>
-              <td className="px-4 py-2">
-                {user && (user.role === 'administrator' || user.role === 'tech_support' || ticket.createdBy === user.id) && (
-                  <button
-                    onClick={() => onDelete(ticket._id)}
-                    className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition"
-                  >
-                    Delete
-                  </button>
-                )}
-              </td>
-            </tr>
-          ))}
+          {tickets.map((ticket, idx) => {
+            console.log('Ticket:', ticket); 
+            return (
+              <tr key={ticket._id} className="border-b hover:bg-gray-50">
+                <td className="px-4 py-2">{idx + 1}</td>
+                <td className="px-4 py-2 font-semibold">
+                  {(user && (user.role === 'administrator' || user.role === 'tech_support') && ticket.status === 'open') ? (
+                    <button
+                      className="text-indigo-700 hover:underline"
+                      style={{ background: 'none', border: 'none', padding: 0, margin: 0, cursor: 'pointer' }}
+                      onClick={() => navigate(`/tickets/${ticket._id}`)}
+                    >
+                      {ticket.title}
+                    </button>
+                  ) : (
+                    ticket.title
+                  )}
+                </td>
+                <td className="px-4 py-2">{statusLabels[ticket.status] || ticket.status}</td>
+                <td className="px-4 py-2">{priorityLabels[ticket.priority] || ticket.priority}</td>
+                <td className="px-4 py-2">{ticket.name || ticket.createdBy}</td>
+                <td className="px-4 py-2">
+                  {user && (user.role === 'administrator' || user.role === 'tech_support' || ticket.createdBy === user.id) && (
+                    <button
+                      onClick={() => onDelete(ticket._id)}
+                      className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition"
+                    >
+                      Delete
+                    </button>
+                  )}
+                </td>
+              </tr>
+            );
+          })}
         </tbody>
       </table>
     </div>

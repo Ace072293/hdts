@@ -59,6 +59,20 @@ router.post('/', authenticateToken, async (req, res) => {
   }
 });
 
+// Update ticket (for assessment, recommendations, etc.)
+router.put('/:id', authenticateToken, async (req, res) => {
+    try {
+      const ticket = await Ticket.findByIdAndUpdate(
+        req.params.id,
+        req.body,
+        { new: true }
+      );
+      res.json(ticket);
+    } catch (err) {
+      res.status(500).json({ error: 'Failed to update ticket' });
+    }
+  });
+
 // Get all tickets (filtered for employees)
 router.get('/', authenticateToken, async (req, res) => {
     try {
@@ -66,7 +80,7 @@ router.get('/', authenticateToken, async (req, res) => {
       if (req.user.role === 'employee') {
         query.createdBy = req.user.id;
       }
-      const tickets = await Ticket.find(query);
+      const tickets = await Ticket.find(query).sort({ createdAt: -1 }); // <-- sort by newest
       res.json(tickets);
     } catch (err) {
       res.status(500).json({ error: 'Server error' });

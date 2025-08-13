@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import axiosInstance from '../axiosConfig';
 
 const TicketDetails = () => {
-  const { ticketId } = useParams();
+  const { id } = useParams();
   const [ticket, setTicket] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -11,7 +11,7 @@ const TicketDetails = () => {
   useEffect(() => {
     const fetchTicketDetails = async () => {
       try {
-        const response = await axiosInstance.get(`/api/tickets/${ticketId}`);
+        const response = await axiosInstance.get(`/api/tickets/${id}`);
         setTicket(response.data);
       } catch (err) {
         setError('Failed to fetch ticket details.');
@@ -21,7 +21,7 @@ const TicketDetails = () => {
     };
 
     fetchTicketDetails();
-  }, [ticketId]);
+  }, [id]);
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;

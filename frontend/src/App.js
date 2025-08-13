@@ -2,7 +2,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import Tickets from './pages/Tickets';
-import TicketDetails from './pages/TicketDetails';
+import TicketAdminDetails from './pages/TicketAdminDetails';
 import CreateTicket from './pages/CreateTicket';
 import Register from './pages/Register';
 import Navbar from './components/Navbar';
@@ -15,7 +15,7 @@ const App = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/tickets" element={<Tickets />} />
-        <Route path="/tickets/:id" element={<TicketDetails />} />
+        <Route path="/tickets/:id" element={<TicketAdminDetails />} />
         <Route path="/create-ticket" element={<CreateTicket />} />
         <Route path="/register" element={<Register />} />
       </Routes>
