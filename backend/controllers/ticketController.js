@@ -6,7 +6,7 @@ const page = parseInt(req.query.page) || 1;
 const limit = parseInt(req.query.limit) || 6;
 
   try {
-    const tickets = await Ticket.find();
+    const tickets = await Ticket.find()
         .skip((page - 1) * limit)
         .limit(limit);
 
