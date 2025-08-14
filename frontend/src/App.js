@@ -1,22 +1,26 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Navbar from './components/Navbar';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Login from './pages/Login';
+import Dashboard from './pages/Dashboard';
+import Tickets from './pages/Tickets';
+import TicketAdminDetails from './pages/TicketAdminDetails';
+import CreateTicket from './pages/CreateTicket';
 import Register from './pages/Register';
-import Profile from './pages/Profile';
-import Tasks from './pages/Tasks';
+import Navbar from './components/Navbar';
 
-function App() {
+const App = () => {
   return (
     <Router>
       <Navbar />
       <Routes>
         <Route path="/login" element={<Login />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/tickets" element={<Tickets />} />
+        <Route path="/tickets/:id" element={<TicketAdminDetails />} />
+        <Route path="/create-ticket" element={<CreateTicket />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/tasks" element={<Tasks />} />
       </Routes>
     </Router>
   );
-}
+};
 
 export default App;
