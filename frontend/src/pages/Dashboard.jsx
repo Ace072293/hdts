@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../axiosConfig';
-import { Pie } from 'react-chartjs-2';
 import { Chart, ArcElement, Tooltip, Legend } from 'chart.js';
 Chart.register(ArcElement, Tooltip, Legend);
 
@@ -34,26 +33,6 @@ const Dashboard = () => {
     fetchTickets();
   }, []);
 
-  // Pie chart data
-  const getStatusCounts = (tickets) => {
-    const counts = { open: 0, in_progress: 0, closed: 0 };
-    tickets.forEach(ticket => {
-      if (counts[ticket.status] !== undefined) counts[ticket.status]++;
-    });
-    return counts;
-  };
-
-  const statusCounts = getStatusCounts(tickets);
-  const pieData = {
-    labels: ['Open', 'In Progress', 'Closed'],
-    datasets: [
-      {
-        data: [statusCounts.open, statusCounts.in_progress, statusCounts.closed],
-        backgroundColor: ['#34d399', '#fbbf24', '#a1a1aa'],
-        borderWidth: 1,
-      },
-    ],
-  };
 
   // Sort tickets newest to oldest
   const sortedTickets = [...tickets].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
@@ -62,7 +41,7 @@ const Dashboard = () => {
     <div className="max-w-4xl mx-auto mt-20 px-4">
       <h1 className="text-4xl font-bold mb-8 text-center text-indigo-600">Dashboard</h1>
 
-      {/* Pie Chart */}
+      {/* Pie Chart
       <div className="max-w-xs mx-auto mb-10">
         <Pie data={pieData} />
         <div className="flex justify-between mt-2 text-sm">
@@ -70,7 +49,7 @@ const Dashboard = () => {
           <span className="text-yellow-600">In Progress</span>
           <span className="text-gray-600">Closed</span>
         </div>
-      </div>
+      </div> */}
 
       {/* Notification List */}
       <div className="bg-white rounded-lg shadow p-4">
